@@ -1303,16 +1303,23 @@
                         continue;
                     }
 
-                    // 18時以降に終了する予約を不可にする (17:30は可)
-                    if (slotEnd.getHours() === 19 && slotEnd.getMinutes() > 0) {
-                        cell.textContent = '✕';
-                        cell.classList.add('unavailable');
-                        continue;
-                    } else if (slotEnd.getHours() > 19) {
-                        cell.textContent = '✕';
-                        cell.classList.add('unavailable');
-                        continue;
-                    }
+// 日曜・土曜：17時以降に終了する場合は✕
+if ([0, 6].includes(slotEnd.getDay())) {
+    if (slotEnd.getHours() === 17 && slotEnd.getMinutes() > 0 || slotEnd.getHours() > 17) {
+        cell.textContent = '✕';
+        cell.classList.add('unavailable');
+        continue;
+    }
+}
+
+// その他の平日（1, 2, 3, 4, 5）：19時以降に終了する場合は✕
+if ([1, 2, 4, 5].includes(slotEnd.getDay())) {
+    if (slotEnd.getHours() === 19 && slotEnd.getMinutes() > 0 || slotEnd.getHours() > 19) {
+        cell.textContent = '✕';
+        cell.classList.add('unavailable');
+        continue;
+    }
+}
 
 // 現在時刻から24時間以内の時間帯は✕にする
 const next24h = new Date(now.getTime() + 24 * 60 * 60 * 1000);
