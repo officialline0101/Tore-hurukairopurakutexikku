@@ -301,21 +301,32 @@
         }
 
         .week-button-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 10px;
-        }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+}
 
-        .week-button {
-            padding: 10px 20px;
-            background-color: #444444;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+.week-button {
+    padding: 10px 20px;
+    background-color: #444444;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    transform-origin: center center;
+}
+
+.week-button:hover {
+    background-color: #444444;
+    transform: scale(1.15); /* ドーン！ってくらい拡大🔥 */
+}
+
+.week-button:active {
+    transform: scale(0.95); /* クリックした瞬間にギュッと縮む💥 */
+}
 
         .month-button-container {
             display: flex;
@@ -333,6 +344,15 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
+        .month-button:hover {
+    background-color: #444444;
+    transform: scale(1.15); /* ドーン！ってくらい拡大🔥 */
+}
+
+.month-button:active {
+    transform: scale(0.95); /* クリックした瞬間にギュッと縮む💥 */
+}
 
         .current-month {
             font-size: 16px;
@@ -733,8 +753,8 @@
 
         <div id="treatment-text" style="display: none; margin-bottom: 10px;"></div>
 
-        <div class="label" id="course">メニューをお選びください<span class="required">必須</span></div>
-        <div class="info-text">※メニューを選択すると空き状況のカレンダーが表示されます</div>
+        <div class="label" id="course">下記の予約ボタンを選択してください<span class="required">必須</span></div>
+        <div class="info-text">※予約を選択すると空き状況のカレンダーが表示されます。</div>
         <div class="symptoms">
             <button type="button" onclick="selectSymptom(this, 'treatment1')" data-price="15000">予約</button>
             <div class="info-text">初回：5800円<br>2回目以降：3800円</div>
