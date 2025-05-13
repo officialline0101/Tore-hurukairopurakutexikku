@@ -1262,6 +1262,10 @@
             // 現在の日時を取得
             const now = new Date();
 
+// ✖にする期限を設定：今日から21日後
+const limitDate = new Date(now);
+limitDate.setDate(now.getDate() + 21);
+
             // テーブルの内容を更新
             for (let i = 0; i < 7; i++) {
                 const day = new Date(currentDate);
@@ -1295,6 +1299,13 @@
 
                     // メニュー時間と訪問回数の時間を合計して、終了時間を設定
                     slotEnd.setMinutes(slotStart.getMinutes() + menuDuration + visitDuration + irradiationsDuration);
+
+        // 👇 ここが追加した条件！
+        if (slotStart >= limitDate) {
+            cell.textContent = '✕';
+            cell.classList.add('unavailable');
+            continue;
+        }
 
                     // 終了時間が翌日 (0時以降) になる場合は✕に設定
                     if (slotEnd.getDate() !== slotStart.getDate()) {
