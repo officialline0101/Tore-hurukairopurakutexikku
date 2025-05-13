@@ -1039,9 +1039,6 @@
             // `treatment-text` を選択されたボタンの直後に移動
             button.parentNode.insertBefore(treatmentText, button.nextSibling);
 
-            // トリートメントテキストを表示
-            treatmentText.style.display = 'block';
-
             // 選択されたメニューの名前と価格を取得
             const symptomName = button.textContent;  // ボタンのテキストを取得
             selectedSymptom = [symptomName];  // 選択されたメニュー名を配列として保存
