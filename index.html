@@ -15,7 +15,7 @@
             /* さらに右へ */
             top: 80%;
             /* 画面中央に固定 */
-            transform: translateY(-50%) translateX(20px);
+            transform: translateY(-50%) translateX(13px);
             /* 中央配置と右ずらし */
             background: #45c4b7;
             display: flex;
@@ -301,32 +301,34 @@
         }
 
         .week-button-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 10px;
-}
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 10px;
+        }
 
-.week-button {
-    padding: 10px 20px;
-    background-color: #444444;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    transform-origin: center center;
-}
+        .week-button {
+            padding: 10px 20px;
+            background-color: #444444;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            transform-origin: center center;
+        }
 
-.week-button:hover {
-    background-color: #444444;
-    transform: scale(1.15); /* ドーン！ってくらい拡大🔥 */
-}
+        .week-button:hover {
+            background-color: #444444;
+            transform: scale(1.15);
+            /* ドーン！ってくらい拡大🔥 */
+        }
 
-.week-button:active {
-    transform: scale(0.95); /* クリックした瞬間にギュッと縮む💥 */
-}
+        .week-button:active {
+            transform: scale(0.95);
+            /* クリックした瞬間にギュッと縮む💥 */
+        }
 
         .month-button-container {
             display: flex;
@@ -346,13 +348,15 @@
         }
 
         .month-button:hover {
-    background-color: #444444;
-    transform: scale(1.15); /* ドーン！ってくらい拡大🔥 */
-}
+            background-color: #444444;
+            transform: scale(1.15);
+            /* ドーン！ってくらい拡大🔥 */
+        }
 
-.month-button:active {
-    transform: scale(0.95); /* クリックした瞬間にギュッと縮む💥 */
-}
+        .month-button:active {
+            transform: scale(0.95);
+            /* クリックした瞬間にギュッと縮む💥 */
+        }
 
         .current-month {
             font-size: 16px;
@@ -724,6 +728,11 @@
             padding: 50px 10px;
             margin-top: 30px;
         }
+
+        .small-text {
+            font-size: 18px;
+            /* 好きなサイズに変更可能 */
+        }
     </style>
 </head>
 
@@ -737,7 +746,9 @@
     </div>
 
     <div class="container">
-        <h1>トレーフルカイロプラクティック<br>予約フォーム
+        <h1>
+            <span class="small-text">トレーフルカイロプラクティック</span><br>
+            予約フォーム
         </h1>
         <div class="label">お客様名<span class="required">必須</span></div>
         <input type="text" id="name" placeholder="お名前を入力してください" oninput="saveInput('name')">
@@ -1279,9 +1290,9 @@
             // 現在の日時を取得
             const now = new Date();
 
-// ✖にする期限を設定：今日から21日後
-const limitDate = new Date(now);
-limitDate.setDate(now.getDate() + 21);
+            // ✖にする期限を設定：今日から21日後
+            const limitDate = new Date(now);
+            limitDate.setDate(now.getDate() + 21);
 
             // テーブルの内容を更新
             for (let i = 0; i < 7; i++) {
@@ -1317,12 +1328,12 @@ limitDate.setDate(now.getDate() + 21);
                     // メニュー時間と訪問回数の時間を合計して、終了時間を設定
                     slotEnd.setMinutes(slotStart.getMinutes() + menuDuration + visitDuration + irradiationsDuration);
 
-        // 👇 ここが追加した条件！
-        if (slotStart >= limitDate) {
-            cell.textContent = '✕';
-            cell.classList.add('unavailable');
-            continue;
-        }
+                    // 👇 ここが追加した条件！
+                    if (slotStart >= limitDate) {
+                        cell.textContent = '✕';
+                        cell.classList.add('unavailable');
+                        continue;
+                    }
 
                     // 終了時間が翌日 (0時以降) になる場合は✕に設定
                     if (slotEnd.getDate() !== slotStart.getDate()) {
@@ -1331,31 +1342,54 @@ limitDate.setDate(now.getDate() + 21);
                         continue;
                     }
 
-// 日曜・土曜：17時以降に終了する場合は✕
-if ([0, 6].includes(slotEnd.getDay())) {
-    if (slotEnd.getHours() === 17 && slotEnd.getMinutes() > 0 || slotEnd.getHours() > 17) {
-        cell.textContent = '✕';
-        cell.classList.add('unavailable');
-        continue;
-    }
-}
+        // ★追加：12時台の一部時間を✕にする条件
+        const dayOfWeek = slotStart.getDay(); // 0:日曜,1:月曜...6:土曜
+        const hour = slotStart.getHours();
+        const minutes = slotStart.getMinutes();
 
-// その他の平日（1, 2, 3, 4, 5）：19時以降に終了する場合は✕
-if ([1, 2, 4, 5].includes(slotEnd.getDay())) {
-    if (slotEnd.getHours() === 19 && slotEnd.getMinutes() > 0 || slotEnd.getHours() > 19) {
-        cell.textContent = '✕';
-        cell.classList.add('unavailable');
-        continue;
-    }
-}
+        // 月火水木金 → 12:00～13:29 を✕
+        if ([1, 2, 3, 4, 5].includes(dayOfWeek)) {
+            if ((hour === 12) || (hour === 13 && minutes <= 59)) {
+                cell.textContent = '✕';
+                cell.classList.add('unavailable');
+                continue;
+            }
+        }
 
-// 現在時刻から24時間以内の時間帯は✕にする
-const next24h = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-if (slotStart < next24h) {
-    cell.textContent = '✕';
-    cell.classList.add('unavailable');
-    continue;
-}
+        // 土日 → 12:00～12:59 を✕
+        if ([0, 6].includes(dayOfWeek)) {
+            if ((hour === 12) || (hour === 13 && minutes <= 29)) {
+                cell.textContent = '✕';
+                cell.classList.add('unavailable');
+                continue;
+            }
+        }
+
+                    // 日曜・土曜：17時以降に終了する場合は✕
+                    if ([0, 6].includes(slotEnd.getDay())) {
+                        if (slotEnd.getHours() === 17 && slotEnd.getMinutes() > 0 || slotEnd.getHours() > 17) {
+                            cell.textContent = '✕';
+                            cell.classList.add('unavailable');
+                            continue;
+                        }
+                    }
+
+                    // その他の平日（1, 2, 3, 4, 5）：19時以降に終了する場合は✕
+                    if ([1, 2, 4, 5].includes(slotEnd.getDay())) {
+                        if (slotEnd.getHours() === 19 && slotEnd.getMinutes() > 0 || slotEnd.getHours() > 19) {
+                            cell.textContent = '✕';
+                            cell.classList.add('unavailable');
+                            continue;
+                        }
+                    }
+
+                    // 現在時刻から24時間以内の時間帯は✕にする
+                    const next24h = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+                    if (slotStart < next24h) {
+                        cell.textContent = '✕';
+                        cell.classList.add('unavailable');
+                        continue;
+                    }
 
                     const isBusinessDay = businessDays.some(businessDay => {
                         const businessDayStart = new Date(businessDay.start);
@@ -1394,11 +1428,6 @@ if (slotStart < next24h) {
                     }
                     // 日曜日で、営業日ではない場合
                     else if (slotStart.getDay() === 1 && !isBusinessDay && businessEventTimes.length === 0) {
-                        cell.textContent = '✕';
-                        cell.classList.add('unavailable');
-                    }
-                    // 日曜日で、営業日ではない場合
-                    else if (slotStart.getDay() === 2 && !isBusinessDay && businessEventTimes.length === 0) {
                         cell.textContent = '✕';
                         cell.classList.add('unavailable');
                     }
